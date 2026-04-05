@@ -4,7 +4,7 @@ import os
 
 app = Flask(__name__)
 
-SERVER_ID = "okz5dj"
+SERVER_ID = "jjj4kl"
 API_URL = f"https://servers-frontend.fivem.net/api/servers/single/{SERVER_ID}"
 
 HTML = """
