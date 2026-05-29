@@ -60,11 +60,10 @@ search.addEventListener("keyup", function() {
 
 def get_players(server_id):
     try:
-        url = f"https://servers-frontend.fivem.net/api/servers/single/{server_id}"
+        url = f"https://servers-frontend.fivem.net/api/servers/detail/{server_id}"
 
         headers = {
-            "User-Agent": "Mozilla/5.0",
-            "Accept": "application/json"
+            "User-Agent": "Mozilla/5.0"
         }
 
         r = requests.get(url, headers=headers, timeout=10)
@@ -72,20 +71,9 @@ def get_players(server_id):
         if r.status_code != 200:
             return [f"HTTP {r.status_code}"]
 
-        text = r.text.strip()
+        data = r.json()
 
-        if not text:
-            return ["Pusta odpowiedź API"]
-
-        try:
-            data = r.json()
-        except:
-            return ["API nie zwróciło JSON"]
-
-        if not data.get("Data"):
-            return ["Serwer offline lub ukryty"]
-
-        players = data["Data"].get("players", [])
+        players = data["Data"]["players"]
 
         return sorted([
             f"[ID:{p.get('id', '?')}] {p.get('name', 'Unknown')}"
