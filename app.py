@@ -63,7 +63,8 @@ def get_players(server_id):
         url = f"https://servers-frontend.fivem.net/api/servers/detail/{server_id}"
 
         headers = {
-            "User-Agent": "Mozilla/5.0"
+            "User-Agent": "Mozilla/5.0",
+            "Accept": "application/json"
         }
 
         r = requests.get(url, headers=headers, timeout=10)
@@ -73,7 +74,8 @@ def get_players(server_id):
 
         data = r.json()
 
-        players = data["Data"]["players"]
+        # NOWA STRUKTURA
+        players = data.get("players", [])
 
         return sorted([
             f"[ID:{p.get('id', '?')}] {p.get('name', 'Unknown')}"
