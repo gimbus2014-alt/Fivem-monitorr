@@ -69,14 +69,26 @@ def get_players(server_id):
 
         r = requests.get(url, headers=headers, timeout=10)
 
-        print(r.text[:500])
+        if r.status_code != 200:
+            return [f"HTTP {r.status_code}"]
 
-        data = r.json()
+        text = r.text.strip()
 
-        players = data["Data"]["players"]
+        if not text:
+            return ["Pusta odpowiedź API"]
+
+        try:
+            data = r.json()
+        except:
+            return ["API nie zwróciło JSON"]
+
+        if not data.get("Data"):
+            return ["Serwer offline lub ukryty"]
+
+        players = data["Data"].get("players", [])
 
         return sorted([
-            f"[ID:{p['id']}] {p['name']}"
+            f"[ID:{p.get('id', '?')}] {p.get('name', 'Unknown')}"
             for p in players
         ])
 
