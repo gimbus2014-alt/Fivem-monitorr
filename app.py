@@ -61,12 +61,29 @@ search.addEventListener("keyup", function() {
 def get_players(server_id):
     try:
         url = f"https://servers-frontend.fivem.net/api/servers/single/{server_id}"
-        r = requests.get(url)
+
+        r = requests.get(url, timeout=10)
+
+        print("STATUS:", r.status_code)
+        print("TEXT:", r.text[:300])
+
         data = r.json()
-        players = data["Data"]["players"]
-        return sorted([f"[ID:{p['id']}] {p['name']}" for p in players])
-    except:
-        return ["Błąd pobierania danych"]
+
+        if "Data" not in data:
+            return ["Brak pola Data"]
+
+        if not data["Data"]:
+            return ["Serwer offline lub ukryty"]
+
+        players = data["Data"].get("players", [])
+
+        return sorted([
+            f"[ID:{p.get('id', '?')}] {p.get('name', 'Unknown')}"
+            for p in players
+        ])
+
+    except Exception as e:
+        return [f"Błąd: {str(e)}"]
 
 @app.route("/")
 def home():
