@@ -63,23 +63,20 @@ def get_players(server_id):
         url = f"https://servers-frontend.fivem.net/api/servers/single/{server_id}"
 
         headers = {
-            "User-Agent": "Mozilla/5.0"
+            "User-Agent": "Mozilla/5.0",
+            "Accept": "application/json"
         }
 
         r = requests.get(url, headers=headers, timeout=10)
 
+        print(r.text[:500])
+
         data = r.json()
 
-        if "Data" not in data:
-            return ["Brak pola Data"]
-
-        if not data["Data"]:
-            return ["Serwer offline lub ukryty"]
-
-        players = data["Data"].get("players", [])
+        players = data["Data"]["players"]
 
         return sorted([
-            f"[ID:{p.get('id', '?')}] {p.get('name', 'Unknown')}"
+            f"[ID:{p['id']}] {p['name']}"
             for p in players
         ])
 
