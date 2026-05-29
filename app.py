@@ -63,13 +63,10 @@ def get_players(server_id):
         url = f"https://servers-frontend.fivem.net/api/servers/single/{server_id}"
 
         headers = {
-    "User-Agent": "Mozilla/5.0"
-}
+            "User-Agent": "Mozilla/5.0"
+        }
 
-r = requests.get(url, headers=headers, timeout=10)
-
-        print("STATUS:", r.status_code)
-        print("TEXT:", r.text[:300])
+        r = requests.get(url, headers=headers, timeout=10)
 
         data = r.json()
 
